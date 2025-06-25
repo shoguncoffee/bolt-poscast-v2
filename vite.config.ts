@@ -10,6 +10,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/voice': 'http://localhost:3001',
+      '/api/voice-list': 'http://localhost:3001',
+      '/api/export-mp4': 'http://localhost:3001',
+      '/api/proxy-audio': 'http://localhost:3001',
     },
   },
 });

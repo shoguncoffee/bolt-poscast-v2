@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import proxyAudio from './src/api/proxyAudio.js';
 import voiceProxy from './src/api/voiceProxy.js';
 
 const app = express();
@@ -7,6 +8,7 @@ app.disable('x-powered-by');
 app.use(express.json({ limit: '2mb' }));
 
 app.use('/api', voiceProxy);
+app.use('/api', proxyAudio);
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
