@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Play, 
-  Pause, 
-  Download, 
-  Share2, 
+import {
+  Download,
+  Share2,
   ChevronDown,
   Radio,
   Headphones,
@@ -12,7 +10,6 @@ import {
   Check,
   X,
   ArrowLeft,
-  Shield,
   Infinity,
   Zap,
   Music
@@ -21,11 +18,13 @@ import AIGenerator from './components/AIGenerator.js';
 import PodcastSettings from './components/PodcastSettings.js';
 import { generatePodcastWithAudio, fetchBotnoiRoles } from './api.js';
 import { Rocket, FileText } from 'lucide-react';
+import Navbar from "./components/Navbar.js";
+import AudioPlayerWithSpeed from './components/AudioPlayerWithSpeed.js';
 
 interface GeneratedScript {
   title: string;
   content: string;
-  speakers: { name: string; role: string; lines: string[] }[];
+  speakers: { name: string; role: string }[];
   audioUrl?: string; // เพิ่ม property สำหรับ audio จริง
 }
 
@@ -37,19 +36,17 @@ function App() {
   const [selectedVoice, setSelectedVoice] = useState(''); // เตรียมใช้ API
   const [selectedRole, setSelectedRole] = useState(''); // เตรียมใช้ API
   const [speed, setSpeed] = useState(1.0); // สามารถ set เป็น null ได้ถ้าต้องการ
-  const [script, setScript] = useState(''); // เตรียมใช้ API
+  const [script, setScript] = useState(''); // สำหรับ prompt รอง (Advanced)
   const [promptIdea, setPromptIdea] = useState(''); // เตรียมใช้ API
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedScript, setGeneratedScript] = useState<GeneratedScript | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioProgress, setAudioProgress] = useState(0);
-  const [usageCount, setUsageCount] = useState(7); // Remaining uses
+  const [usageCount, setUsageCount] = useState(10); // Remaining uses
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
-  const [voices, setVoices] = useState<any[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
   const [currentPlan] = useState('basic'); // removed setCurrentPlan (unused)
+  const [language, setLanguage] = useState('th');
   
   const downloadFormats = [
     { id: 'mp3', name: 'MP3', description: 'Most compatible' },
@@ -136,23 +133,30 @@ function App() {
 
   // โหลด voice/role จาก API (หรือ mock)
   useEffect(() => {
-    setVoices([]); // หรือ mock voices ถ้ามี
     fetchBotnoiRoles().then(setRoles).catch(() => setRoles([]));
   }, []);
 
   // สร้าง Podcast Script และ Audio ด้วย API
+  const canGenerate = !!title.trim() && !!selectedVoice && !!selectedRole && !!speed && !!language && !!promptIdea.trim();
+
   const generatePodcast = async () => {
-    if (!promptIdea.trim()) return;
+    if (!canGenerate) return;
     setIsGenerating(true);
     setUsageCount(prev => Math.max(0, prev - 1));
     try {
+      // รวม prompt หลักและ prompt รอง (ถ้ามี)
+      let fullPrompt = promptIdea.trim();
+      if (script.trim()) {
+        fullPrompt += '\n\n' + script.trim();
+      }
       const { script: content, audioUrl } = await generatePodcastWithAudio({
-        topic: promptIdea,
+        topic: fullPrompt,
         speaker: selectedVoice || '1',
         speed,
         type_media: 'm4a',
         save_file: true,
-        language: 'th',
+        language,
+        role: selectedRole || undefined,
       });
       const mockScript = {
         title: title || 'AI Generated Podcast',
@@ -161,11 +165,6 @@ function App() {
           {
             name: selectedVoice || 'Speaker',
             role: selectedRole || 'Host',
-            lines: [
-              `Hello and welcome to today's podcast about ${promptIdea}`,
-              'Let me share some interesting insights about this topic...',
-              'This brings us to our main discussion point...',
-            ],
           },
         ],
         audioUrl,
@@ -175,23 +174,6 @@ function App() {
       alert('เกิดข้อผิดพลาดในการสร้าง Podcast: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsGenerating(false);
-    }
-  };
-
-  const togglePlayback = () => {
-    setIsPlaying(!isPlaying);
-    // Simulate audio playback
-    if (!isPlaying) {
-      const interval = setInterval(() => {
-        setAudioProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setIsPlaying(false);
-            return 0;
-          }
-          return prev + 1;
-        });
-      }, 100);
     }
   };
 
@@ -258,7 +240,7 @@ function App() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
-                <Shield className="w-6 h-6" />
+                <Radio className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold">Current Plan: Basic</h3>
@@ -448,50 +430,7 @@ function App() {
 
   const renderHomePage = () => (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white">
-      {/* Header */}
-      <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                <Radio className="w-6 h-6" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Botcats
-                </h1>
-                <p className="text-sm text-gray-400">AI Podcast Creator</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              {/* Upgrade Button */}
-              <button
-                onClick={() => setCurrentPage('payment')}
-                className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center"
-              >
-                <Crown className="w-4 h-4 mr-2" />
-                Upgrade
-              </button>
-              
-              {/* Usage Counter */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
-                <div className="flex items-center space-x-2">
-                  <Zap className="w-4 h-4 text-yellow-400" />
-                  <span className="text-sm font-medium">{usageCount} uses left today</span>
-                </div>
-                <div className="w-32 h-1 bg-white/20 rounded-full mt-1">
-                  <div 
-                    className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full transition-all duration-300"
-                    style={{ width: `${(usageCount / 10) * 100}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Controls */}
@@ -502,16 +441,15 @@ function App() {
               setTitle={setTitle}
               selectedVoice={selectedVoice}
               setSelectedVoice={setSelectedVoice}
-              voices={voices}
+              voices={[]}
               selectedRole={selectedRole}
               setSelectedRole={setSelectedRole}
               roles={roles}
               speed={speed}
               setSpeed={setSpeed}
-              showAdvanced={showAdvanced}
-              setShowAdvanced={setShowAdvanced}
-              script={script}
-              setScript={setScript}
+              speedError={''}
+              language={language}
+              setLanguage={setLanguage}
             />
             {/* AI Generation */}
             <AIGenerator
@@ -520,6 +458,11 @@ function App() {
               generatePodcast={generatePodcast}
               isGenerating={isGenerating}
               usageCount={usageCount}
+              showAdvanced={showAdvanced}
+              setShowAdvanced={setShowAdvanced}
+              script={script}
+              setScript={setScript}
+              canGenerate={canGenerate}
             />
             {/* Generated Script Display */}
             {generatedScript && (
@@ -536,9 +479,6 @@ function App() {
                   {generatedScript.speakers.map((speaker, index) => (
                     <div key={index} className="border-l-2 border-purple-500 pl-4">
                       <p className="text-sm text-purple-400 font-medium">{speaker.name} ({speaker.role})</p>
-                      {speaker.lines.map((line, lineIndex) => (
-                        <p key={lineIndex} className="text-gray-300 mt-1">"{line}"</p>
-                      ))}
                     </div>
                   ))}
                 </div>
@@ -558,12 +498,7 @@ function App() {
                 
                 {/* ถ้ามี audioUrl ให้เล่นเสียงจริง */}
                 {generatedScript.audioUrl ? (
-                  <audio
-                    controls
-                    src={generatedScript.audioUrl}
-                    className="w-full mb-4"
-                    style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '0.75rem' }}
-                  />
+                  <AudioPlayerWithSpeed src={generatedScript.audioUrl} speed={speed} />
                 ) : (
                   // Waveform Visualization
                   <div className="bg-black/30 rounded-xl p-4 mb-4">
@@ -572,50 +507,15 @@ function App() {
                         {[...Array(40)].map((_, i) => (
                           <div
                             key={i}
-                            className={`w-1 bg-gradient-to-t from-purple-500 to-pink-500 rounded-full transition-all duration-150 ${
-                              i < (audioProgress / 100) * 40 ? 'opacity-100' : 'opacity-30'
-                            }`}
+                            className={`w-1 bg-gradient-to-t from-purple-500 to-pink-500 rounded-full transition-all duration-150 opacity-30`}
                             style={{ height: `${Math.random() * 60 + 10}px` }}
                           />
                         ))}
                       </div>
                     </div>
-                    
-                    {/* Progress Bar */}
-                    <div className="w-full h-1 bg-white/20 rounded-full mt-3">
-                      <div 
-                        className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-100"
-                        style={{ width: `${audioProgress}%` }}
-                      />
-                    </div>
                   </div>
                 )}
 
-                {/* Playback Controls */}
-                <div className="flex items-center justify-between">
-                  <button
-                    onClick={togglePlayback}
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white p-3 rounded-full transition-all duration-200"
-                  >
-                    {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
-                  </button>
-                  
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-400">Speed:</span>
-                    <select
-                      value={speed}
-                      onChange={(e) => setSpeed(parseFloat(e.target.value))}
-                      className="bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    >
-                      <option value="0.5" className="bg-gray-800">0.5x</option>
-                      <option value="0.75" className="bg-gray-800">0.75x</option>
-                      <option value="1.0" className="bg-gray-800">1.0x</option>
-                      <option value="1.25" className="bg-gray-800">1.25x</option>
-                      <option value="1.5" className="bg-gray-800">1.5x</option>
-                      <option value="2.0" className="bg-gray-800">2.0x</option>
-                    </select>
-                  </div>
-                </div>
               </div>
             )}
 
@@ -703,7 +603,7 @@ function App() {
                 </div>
                 
                 <p className="text-sm text-gray-400">
-                  Resets in 12 hours
+                  Resets 1 energy every 3 hours. 
                 </p>
                 
                 <button

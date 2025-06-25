@@ -10,6 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/voice': 'http://localhost:3001',
+      '/api/voice-list': 'http://localhost:3001', // เพิ่ม proxy สำหรับ voice-list
     },
   },
 });
