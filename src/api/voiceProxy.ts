@@ -7,8 +7,6 @@ const router = express.Router();
 // Voice generation endpoint that proxies to Botnoi API
 router.post('/voice', async (req: any, res: any) => {
   try {
-    console.log('Voice API request received:', req.body);
-    
     const {
       text,
       speaker = '1',
@@ -31,40 +29,23 @@ router.post('/voice', async (req: any, res: any) => {
       return res.status(500).json({ error: 'Missing BOTNOI_API_KEY in environment' });
     }
 
-    console.log('Using API key:', botnoiApiKey.substring(0, 10) + '...');
-
     // Prepare request to Botnoi API
     const botnoiPayload = {
       text,
-      speaker,
-      volume,
-      speed,
-      type_media,
-      save_file,
-      language
+      speaker: String(speaker),
+      volume: String(volume),
+      speed: String(speed),
+      type_media: String(type_media),
+      save_file: String(save_file),
+      language: String(language)
     };
 
-    console.log('Sending request to Botnoi API:', botnoiPayload);
-
-    // TODO: Temporary mock response for testing - remove when Botnoi API is accessible
-    if (process.env.NODE_ENV === 'development' || true) {
-      console.log('Using mock response for development');
-      const mockResponse = {
-        result: {
-          url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav',
-          file: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav'
-        },
-        audio_url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav'
-      };
-      return res.json(mockResponse);
-    }
-
     // Make request to Botnoi API
-    const botnoiResponse = await fetch('https://api.botnoi.ai/v1/tts', {
+    const botnoiResponse = await fetch("https://api-voice.botnoi.ai/openapi/v1/generate_audio", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${botnoiApiKey}`
+        'Botnoi-Token': botnoiApiKey
       },
       body: JSON.stringify(botnoiPayload)
     });

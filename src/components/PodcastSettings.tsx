@@ -32,7 +32,7 @@ const PodcastSettings: React.FC<PodcastSettingsProps> = ({
   setSpeed,
   speedError = "",
   language,
-  setLanguage
+  setLanguage,
 }) => {
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
@@ -62,10 +62,10 @@ const PodcastSettings: React.FC<PodcastSettingsProps> = ({
               className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all appearance-none"
               size={1}
             >
-              <option value="" disabled hidden>โปรดเลือกเสียงพูด</option>
+              <option value="" disabled hidden>เลือกเสียงพูด (Speaker)</option>
               {voices.map((voice) => (
                 <option key={voice.id} value={voice.id} className="bg-gray-800">
-                  {voice.name} {voice.id ? `(speaker: ${voice.id})` : ''}
+                  {voice.name} - {voice.accent}
                 </option>
               ))}
             </select>
