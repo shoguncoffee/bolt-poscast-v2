@@ -22,7 +22,7 @@
     "outDir": "dist",
     "rootDir": "."
   },
-  "include": ["src", "server.ts"],
+  "include": ["src"],
   "ts-node": {
     "module": "ESNext"
   }

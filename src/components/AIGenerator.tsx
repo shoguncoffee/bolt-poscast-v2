@@ -7,7 +7,6 @@ interface AIGeneratorProps {
   setPromptIdea: (v: string) => void;
   generatePodcast: () => void;
   isGenerating: boolean;
-  usageCount: number;
   showAdvanced: boolean;
   setShowAdvanced: (v: boolean) => void;
   script: string;
@@ -20,7 +19,6 @@ const AIGenerator: React.FC<AIGeneratorProps> = ({
   setPromptIdea,
   generatePodcast,
   isGenerating,
-  usageCount,
   showAdvanced,
   setShowAdvanced,
   script,
@@ -70,7 +68,7 @@ const AIGenerator: React.FC<AIGeneratorProps> = ({
       )}
       <button
         onClick={generatePodcast}
-        disabled={!canGenerate || isGenerating || usageCount <= 0}
+        disabled={!canGenerate || isGenerating}
         className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center disabled:cursor-not-allowed"
       >
         {isGenerating ? (

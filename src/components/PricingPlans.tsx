@@ -128,8 +128,9 @@ const PricingPlans: React.FC<PricingPlansProps> = ({ pricingPlans, currentPlan, 
             <tr className="border-b border-white/20">
               <th className="text-left py-4 px-4">Features</th>
               <th className="text-center py-4 px-4">Basic</th>
+              <th className="text-center py-4 px-4">Basic +</th>
               <th className="text-center py-4 px-4">Pro</th>
-              <th className="text-center py-4 px-4">Extreme</th>
+              <th className="text-center py-4 px-4">Premium</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/10">

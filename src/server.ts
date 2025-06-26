@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
-import proxyAudio from './api/proxyAudio';
-import voiceProxy from './api/voiceProxy';
+import proxyAudio from './api/audio/proxy';
+import voiceProxy from './api/audio/botnoi';
 
 const app = express();
 app.disable('x-powered-by');

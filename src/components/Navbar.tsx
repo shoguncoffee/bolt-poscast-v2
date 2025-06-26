@@ -13,7 +13,6 @@ export default function Navbar() {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -72,10 +71,6 @@ export default function Navbar() {
       return false;
     }
     if (!isLoginMode) {
-      if (!name.trim()) {
-        setErrorMsg("Please enter your name.");
-        return false;
-      }
       if (password !== confirmPassword) {
         setErrorMsg("Passwords do not match.");
         return false;
@@ -122,7 +117,6 @@ export default function Navbar() {
   };
 
   const resetForm = () => {
-    setName("");
     setEmail("");
     setPassword("");
     setConfirmPassword("");
@@ -237,16 +231,6 @@ export default function Navbar() {
               }}
               className="space-y-4"
             >
-              {!isLoginMode && (
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  className="w-full rounded-lg border border-gray-300 px-5 py-3"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  disabled={loading}
-                />
-              )}
               <input
                 type="email"
                 placeholder="Email address"
