@@ -12,11 +12,18 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   server: {
+    hmr: false,
     proxy: {
-      '/api/voice': 'http://localhost:3001',
-      '/api/voice-list': 'http://localhost:3001',
-      '/api/export-mp4': 'http://localhost:3001',
-      '/api/proxy-audio': 'http://localhost:3001',
+      '^/api/.*': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
     },
+    watch: {
+      ignored: ["src/server/**", "dist/**"],
+    },
+    allowedHosts: [
+      'icarus24.tailc3d0f.ts.net',
+    ],
   },
 });

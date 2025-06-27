@@ -1,4 +1,10 @@
 {
+  "compilerOptions": {
+    "incremental": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "resolveJsonModule": true,
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

@@ -43,6 +43,7 @@ const PodcastSettings: React.FC<PodcastSettingsProps> = ({
           <label className="text-sm font-medium mb-2">Podcast Title</label>
           <input
             type="text"
+            id='podcast-title'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter your podcast title..."

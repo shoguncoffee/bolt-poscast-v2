@@ -10,13 +10,13 @@ export default Router()
       language = 'th'
     } = req.body;
 
-    const botnoiResponse = await fetch(
+    const botnoi_res = await fetch(
       'https://api-voice.botnoi.ai/openapi/v1/generate_audio',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Botnoi-Token': process.env.BOTNOI_API_KEY!
+          'Botnoi-Token': process.env.BOTNOI_API_KEY,
         },
         body: JSON.stringify({
           text,
@@ -30,18 +30,15 @@ export default Router()
       }
     );
 
-    if (!botnoiResponse.ok) {
-      const errorText = await botnoiResponse.text();
-      console.error('Botnoi API error:', botnoiResponse.status, errorText);
+    if (!botnoi_res.ok) {
+      const msg = await botnoi_res.text();
+      console.error('Botnoi API error:', botnoi_res.status, msg);
 
-      res.status(botnoiResponse.status).json({
-        error: 'Botnoi API error',
-        details: errorText
-      });
+      res.status(botnoi_res.status).end();
       return;
     }
 
-    const botnoiData = await botnoiResponse.json();
+    const botnoiData = await botnoi_res.json();
 
-    res.json(botnoiData);
+    res.send(botnoiData.audio_url);
   });

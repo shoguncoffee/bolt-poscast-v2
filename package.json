@@ -1,5 +1,5 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "botcat",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,29 +8,31 @@
     "build": "vite build",
     "preview": "vite preview",
     "build:backend": "tsc -p tsconfig.app.json",
-    "start:backend": "node dist/server.js",
-    "dev:all": "concurrently \"npm run build:backend && npm run start:backend\" \"npm run dev\"",
+    "start:backend": "node dist/server/main.js",
     "supabase": "supabase gen types typescript --project-id \"aqqgufqklqltopfnofoy\" --schema public > src/supabase/database.types.ts"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
     "@supabase/supabase-js": "^2.50.2",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "googleapis": "^150.0.1",
     "lucide-react": "^0.523.0",
+    "multer": "^2.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.3",
+    "@types/multer": "^1.4.13",
     "@types/node": "^24.0.4",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
-    "concurrently": "^9.2.0",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3",
     "vite": "^7.0.0"

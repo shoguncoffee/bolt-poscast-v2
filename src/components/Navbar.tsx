@@ -1,8 +1,7 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Bot, ChevronDown, User, LogOut } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import Supabase from '../supabase/client.js';
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 
 export default function Navbar() {

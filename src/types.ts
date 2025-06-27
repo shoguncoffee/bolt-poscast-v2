@@ -39,3 +39,39 @@ export interface SpeakerResponse {
     speaker_v2: boolean
   }[]
 }
+
+export interface YoutubeUploadRequest {
+  filename: string;
+  title: string;
+  description: string;
+  privacy: 'public' | 'unlisted' | 'private';
+}
+
+export interface YoutubeUploadResponse {
+    id: string;
+    snippet: {
+      title: string;
+      description: string;
+    };
+    status: {
+      privacyStatus: 'public' | 'unlisted' | 'private';
+    };
+}
+
+export type OAuth2ProvidersResponse = {
+  name: string;
+  scope: string;
+}[];
+
+export interface ConnectResponse {
+  url: string;
+}
+
+export interface Credentials {
+  access_token: string;
+  refresh_token?: string;
+  scope: string;
+  token_type: string;
+  refresh_token_expires_in: number;
+  expiry_date: number;
+}
