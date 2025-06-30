@@ -164,6 +164,7 @@ export default function App() {
 
     const link = document.createElement('a');
     link.href = downloadUrl;
+    link.download = fileName;
     link.click();
   };
 

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { pipeline } from 'stream/promises';
 
 // Proxy any audio file from a remote URL (e.g. S3) to bypass CORS <- no, just change file name
 export default Router()
@@ -18,9 +19,13 @@ export default Router()
       return;
     }
 
+    console.log(filename, encodeURI(filename), encodeURIComponent(filename));
+
     res.set({
       'Content-Type': response.headers.get('content-type')!,
       'Content-Disposition': `attachment; filename="${encodeURI(filename)}"`,
     });
-    res.send(response.body);
+
+    // @ts-ignore
+    await pipeline(response.body!, res)
   });

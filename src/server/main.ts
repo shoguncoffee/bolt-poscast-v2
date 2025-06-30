@@ -3,7 +3,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 
 import connections from './connections.js';
-import script from './script.js';
+import script from './audio/script.js';
 import proxy from './audio/proxy.js';
 import botnoi from './audio/botnoi.js';
 import callback from './oauth2/callback.js';

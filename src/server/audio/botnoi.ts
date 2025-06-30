@@ -2,13 +2,17 @@ import { Router } from 'express';
 
 export default Router()
   .post('/voice', async (req, res) => {
-    const {
+    let {
       text,
       speaker = '1',
       volume = 1,
       speed = 1,
       language = 'th'
     } = req.body;
+
+    if (text.length > 2000) {
+      text = text.slice(0, 2000) + '...';
+    }
 
     const botnoi_res = await fetch(
       'https://api-voice.botnoi.ai/openapi/v1/generate_audio',

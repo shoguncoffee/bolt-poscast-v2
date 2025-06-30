@@ -47,11 +47,11 @@ export default Router()
       '-vf', '"scale=trunc(iw/2)*2:trunc(ih/2)*2,tinterlace=mode=interleave_top,setparams=field_mode=tff"',
       '-c:v', 'libx265',
       '-pix_fmt', 'yuv420p',
-      '-crf', '40',
-      '-preset', 'veryfast',
+      '-crf', '41',
+      '-preset', 'superfast',
       '-t', time.toString(),
       '-c:a', 'aac',
-      '-b:a', '28k',
+      '-b:a', '26k',
       `"${video_path}"`
     ].join(' '));
 

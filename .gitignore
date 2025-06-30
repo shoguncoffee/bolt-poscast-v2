@@ -26,3 +26,4 @@ dist-ssr
 
 tmp
 secret
+tsconfig.app.tsbuildinfo
